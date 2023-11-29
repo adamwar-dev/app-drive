@@ -15,7 +15,7 @@ import { Checkbox } from '@mui/material';
 import { regexEmail, regexEmpty, regexPassword } from '../../components/Utils';
 import { useEffect } from 'react';
 import Loader from '../../components/Loader';
-import { Copyright } from '@mui/icons-material';
+import { Copyrights } from '../../components/Copyrights';
 
 
 
@@ -203,7 +203,7 @@ const SignUp = () => {
 						</Grid>
 					}
 					</Grid>
-					<Copyright sx={{ mt: 5 }} />
+					<Copyrights sx={{ mt: 5 }} />
 				</Box>
 			</Box>
 			</Grid>
