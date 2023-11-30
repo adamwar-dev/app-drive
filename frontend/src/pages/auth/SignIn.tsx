@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { jwtDecode } from 'jwt-decode';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -26,6 +27,27 @@ const SignIn = () => {
 	const [loader, setLoader] = React.useState(false);
 
     const [emailError, setEmailError] = React.useState(true);
+
+	/** Google Stuff */
+	const handleCallbackResponse = (response: any) => {
+		const userObject = jwtDecode(response.credential)
+		console.log(userObject);
+	}
+
+	React.useEffect(() => {
+		if (window.google) {
+
+			window.google.accounts.id.initialize({
+				client_id: '703898790113-ed9lr919acsohojpfc3j6qu2po4refv1.apps.googleusercontent.com',
+				callback: handleCallbackResponse
+			});
+	
+			window.google.accounts.id.renderButton(
+				document.getElementById('signInDiv'),
+				{ theme: 'filled_blue', size: 'large' }
+			);
+		}
+	}, []);
 
     React.useEffect(() => {
 		setEmailError(!regexEmail.test(email));
@@ -115,6 +137,7 @@ const SignIn = () => {
 					>
 						{'Sign in'}
 					</Button>
+					<div id='signInDiv' style={{width: '240px', margin: '10px auto'}}></div>
 					<Grid container>
 						<Grid item xs={8}>
 							<Link href="/signUp" variant="body2">
