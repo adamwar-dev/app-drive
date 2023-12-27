@@ -7,6 +7,7 @@ import MainPage from './pages/MainPage';
 import Profile from './pages/profile/Profile';
 import Tags from './pages/profile/Tags';
 import Privacy from './pages/profile/Privacy';
+import Verify from './pages/auth/Verify';
 
 function App() {
 	return (
@@ -15,6 +16,7 @@ function App() {
 				<Route path={'/'} element={<SignIn/>} />
 				<Route path={'/signIn'} element={<SignIn/>} />
 				<Route path={'/signUp'} element={<SignUp/>} />
+				<Route path={'/verify/:token'} element={<Verify/>}/>
 				<Route path={'/mainPage'} element={<MainPage/>} />
 				<Route path={'/profile'} element={<Profile/>} />
 				<Route path={'/profile/tags'} element={<Tags/>} />
