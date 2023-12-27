@@ -8,6 +8,7 @@ import Profile from './pages/profile/Profile';
 import Tags from './pages/profile/Tags';
 import Privacy from './pages/profile/Privacy';
 import Verify from './pages/auth/Verify';
+import Gallery from './pages/gallery/Gallery';
 
 function App() {
 	return (
@@ -21,6 +22,7 @@ function App() {
 				<Route path={'/profile'} element={<Profile/>} />
 				<Route path={'/profile/tags'} element={<Tags/>} />
 				<Route path={'/profile/privacy'} element={<Privacy/>} />
+				<Route path={'/gallery'} element={<Gallery/>} />
 			</Routes>
 		</React.Fragment>
 	);
