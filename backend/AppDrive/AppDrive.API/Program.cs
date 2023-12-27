@@ -1,5 +1,6 @@
 using AppDrive.API.Authorization;
 using AppDrive.API.Helpers;
+using AppDrive.API.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
@@ -51,6 +52,11 @@ services.AddSwaggerGen(c =>
 
 services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
+
+services.AddScoped<IJwtUtils, JwtUtils>();
+services.AddScoped<IAccountService, AccountService>();
+services.AddScoped<IEmailService, EmailService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -93,4 +99,4 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-app.Run("http://localhost:4000");
+app.Run();
