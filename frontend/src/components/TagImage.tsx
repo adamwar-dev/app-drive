@@ -1,6 +1,6 @@
 import * as React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Button, Card, CardContent, Grid, IconButton, Typography } from '@mui/material';
+import { Card, CardContent, Grid, IconButton, Typography } from '@mui/material';
 
 interface iTagImage {
 	name: string;
