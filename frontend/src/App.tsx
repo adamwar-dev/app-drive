@@ -12,6 +12,7 @@ import Gallery from './pages/gallery/Gallery';
 import Folder from './pages/gallery/Folder';
 import Photo from './pages/gallery/Photo';
 import EditPhoto from './pages/gallery/EditPhoto';
+import AddImage from './pages/AddImage';
 
 function App() {
 	return (
@@ -25,10 +26,12 @@ function App() {
 				<Route path={'/profile'} element={<Profile/>} />
 				<Route path={'/profile/tags'} element={<Tags/>} />
 				<Route path={'/profile/privacy'} element={<Privacy/>} />
+				<Route path={'/addImage'} element={<AddImage/>} />
 				<Route path={'/gallery'} element={<Gallery/>} />
 				<Route path={'/gallery/:parentId/folder/:folderId'} element={<Folder/>} />
 				<Route path={'/gallery/folder/:folderId/image/:id'} element={<Photo/>} />
 				<Route path={'/gallery/folder/:folderId/image/:id/edit'} element={<EditPhoto/>} />
+				
 
 			</Routes>
 		</React.Fragment>
