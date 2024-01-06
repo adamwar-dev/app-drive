@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Popover, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import FolderCopyTwoToneIcon from '@mui/icons-material/FolderCopyTwoTone';
@@ -31,6 +31,9 @@ const Folder = () => {
 		folders: [],
 		images: [],
 	});
+
+	const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+	const open = Boolean(anchorEl);
 
 	const [newFolder, setNewFolder] = React.useState('');
 
@@ -117,9 +120,18 @@ const Folder = () => {
 		});
 	}
 
+	const onShareClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		navigator.clipboard.writeText("http://localhost:3000/share/" + folderId);
+		setAnchorEl(event.currentTarget);
+	}
+
 	const onRaportClick = () => {
 		window.location.replace("/raport/" + folderId);
 	}
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	  };
 
 	const renderFolders = folder.folders.map((nestedFolder) => (
 		<Grid item xs={12} sm={6} md={4}>
@@ -179,9 +191,21 @@ const Folder = () => {
 						</Button>
 					</Grid>
 					<Grid item xs={3}>
-						<Button fullWidth variant="contained" sx={{height: '56px', backgroundColor: '#0aa1dd'}}>
+						<Button fullWidth variant="contained" onClick={onShareClick} sx={{height: '56px', backgroundColor: '#0aa1dd'}}>
 							{'Share'}
 						</Button>
+						<Popover
+							id={'popup'}
+							open={open}
+							anchorEl={anchorEl}
+							onClose={handleClose}
+							anchorOrigin={{
+							vertical: 'bottom',
+							horizontal: 'left',
+							}}
+						>
+							<Typography sx={{ p: 2 }}>{'Copied link to the clipboard'}</Typography>
+						</Popover>
 					</Grid>
 					<Grid item xs={3}>
 						<Button fullWidth onClick={onRaportClick} variant="contained" sx={{height: '56px'}}>
