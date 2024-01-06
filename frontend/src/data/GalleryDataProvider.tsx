@@ -28,6 +28,15 @@ export interface iFolderData {
 	images: iReceivedImage[];
 }
 
+interface iCategoryStat {
+	name: string;
+	count: string;
+}
+export interface iRaportData {
+	allCount: string;
+	categoriesStats: iCategoryStat[];
+}
+
 export class GalleryDataProvider {
 
 	public static uploadImages(data: iUploadImages) {
@@ -191,6 +200,94 @@ export class GalleryDataProvider {
 		}).catch(er => {
 			console.log(er);
 			return status;
+		});
+	}
+
+	public static getRaportData(token: string, folderId: string) {
+		let status = 0;
+		return axios.post(`http://localhost:4000/api/folder/GetFolderStats`, {
+			UserToken: token,
+			FolderId: folderId,
+		}, {
+			headers: {
+				'Accept' : 'application/json',
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			}
+		}).then(res => {
+			console.log(res);
+			console.log(res.data);
+			const data = res.data;
+			const raportStats: iRaportData = {
+				allCount: data.imageCount,
+				categoriesStats: [],
+			};
+			data.imageCategories.forEach((item: { categoryName: any; imageCount: any; }) => {
+				const catergoryStat: iCategoryStat = {
+					name: item.categoryName,
+					count: item.imageCount,
+				}
+			raportStats.categoriesStats.push(catergoryStat);
+			});
+			return raportStats;
+		}).catch(er => {
+			console.log(er);
+			return status;
+		});
+	}
+
+	public static getShareFolder(folderId: string ) {
+		let data = 0;
+		return axios.post(`http://localhost:4000/api/folder/GetShareFolder`, {
+			UserToken: '',
+			FolderId: folderId,
+		}, {
+			headers: {
+				'Accept' : 'application/json',
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			}
+		}).then(res => {
+			console.log(res);
+			console.log(res.data);
+			const data = res.data;
+			const folder: iFolderData = {
+				folderName: data.folderName,
+				parentFolderId: data.parentFolderId,
+				folders: [],
+				images: [],
+			}
+			data.inverseParentFolder.forEach((item: { folderName: any; id: any; }) => {
+				const nestedFolder: iSimplyFolder = {
+					folderName: item.folderName,
+					id: item.id,
+				}
+				folder.folders.push(nestedFolder);
+			});
+			data.images.forEach((item: {
+				folderId: any;
+				id: any;
+				imageData: any;
+				imageDateOfCreate: any;
+				imageDescription: any;
+				imageTitle: any;
+			}) => {
+				const image: iReceivedImage = {
+					folderId: item.folderId,
+					id: item.id,
+					image: item.imageData,
+					date: item.imageDateOfCreate,
+					description: item.imageDescription,
+					title: item.imageTitle,
+					tags: [],
+				}
+				folder.images.push(image);
+			});
+			console.log(folder);
+			return folder;
+		}).catch(er => {
+			console.log(er);
+			return data;
 		});
 	}
 }

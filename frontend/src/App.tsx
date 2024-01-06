@@ -13,6 +13,8 @@ import Folder from './pages/gallery/Folder';
 import Photo from './pages/gallery/Photo';
 import EditPhoto from './pages/gallery/EditPhoto';
 import AddImage from './pages/AddImage';
+import Raport from './pages/Raport';
+import Share from './pages/Share';
 
 function App() {
 	return (
@@ -26,13 +28,13 @@ function App() {
 				<Route path={'/profile'} element={<Profile/>} />
 				<Route path={'/profile/tags'} element={<Tags/>} />
 				<Route path={'/profile/privacy'} element={<Privacy/>} />
-				<Route path={'/addImage'} element={<AddImage/>} />
+				<Route path={'/addPicture'} element={<AddImage/>} />
 				<Route path={'/gallery'} element={<Gallery/>} />
 				<Route path={'/gallery/:parentId/folder/:folderId'} element={<Folder/>} />
 				<Route path={'/gallery/folder/:folderId/image/:id'} element={<Photo/>} />
 				<Route path={'/gallery/folder/:folderId/image/:id/edit'} element={<EditPhoto/>} />
-				
-
+				<Route path={'/raport/:folderId'} element={<Raport/>} />
+				<Route path={'/share/:folderId'} element={<Share/>} />
 			</Routes>
 		</React.Fragment>
 	);

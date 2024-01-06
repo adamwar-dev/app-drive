@@ -11,26 +11,45 @@ interface iSimplyImage {
 	id: string;
 	title: string;
 	folderId: string;
+	share?: boolean;
 }
 
 const SimplyImage = (props: iSimplyImage) => {
-	const { image, id, title, folderId } = props;
-
+	const { image, id, title, folderId, share } = props;
 	return (
 		<Card sx={{ maxWidth: 345, mx: 'auto' }}>
-			<Link href={'/gallery/folder/' + folderId + '/image/' + id} underline={'none'}>
-				<CardMedia
-					component="img"
-					height="140"
-					image={image ?? NO_IMAGE}
-					alt="Image"
-				/>
-			</Link>
-			<CardContent>
-				<Typography align='center' sx={{ fontSize: 20 }} noWrap>
-					{title}
-				</Typography>
-			</CardContent>
+			{share &&
+				<React.Fragment>
+					<CardMedia
+						component="img"
+						height="140"
+						image={image ?? NO_IMAGE}
+						alt="Image"
+					/>
+					<CardContent>
+						<Typography align='center' sx={{ fontSize: 20 }} noWrap>
+							{title}
+						</Typography>
+					</CardContent>
+				</React.Fragment>
+			}
+			{!share &&
+			<React.Fragment>
+				<Link href={'/gallery/folder/' + folderId + '/image/' + id} underline={'none'}>
+					<CardMedia
+						component="img"
+						height="140"
+						image={image ?? NO_IMAGE}
+						alt="Image"
+					/>
+				</Link>
+				<CardContent>
+					<Typography align='center' sx={{ fontSize: 20 }} noWrap>
+						{title}
+					</Typography>
+				</CardContent>
+			</React.Fragment>
+			}
 	  </Card>
 	);
 };
