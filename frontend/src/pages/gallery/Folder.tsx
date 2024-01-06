@@ -117,6 +117,10 @@ const Folder = () => {
 		});
 	}
 
+	const onRaportClick = () => {
+		window.location.replace("/raport/" + folderId);
+	}
+
 	const renderFolders = folder.folders.map((nestedFolder) => (
 		<Grid item xs={12} sm={6} md={4}>
 			<FolderItem
@@ -180,7 +184,7 @@ const Folder = () => {
 						</Button>
 					</Grid>
 					<Grid item xs={3}>
-						<Button fullWidth variant="contained" sx={{height: '56px'}}>
+						<Button fullWidth onClick={onRaportClick} variant="contained" sx={{height: '56px'}}>
 							{'Raport'}
 						</Button>
 					</Grid>
