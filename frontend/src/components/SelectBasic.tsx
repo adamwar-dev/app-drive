@@ -9,6 +9,7 @@ import { iSimplyFolder } from '../data/GalleryDataProvider';
 interface iSelectBasic {
 	folders: iSimplyFolder[];
 	onFolderChange: React.Dispatch<React.SetStateAction<iSimplyFolder>>;
+	label?:string;
 }
 
 const SelectBasic = (props: iSelectBasic) => {
@@ -16,6 +17,7 @@ const SelectBasic = (props: iSelectBasic) => {
 	const {
 		folders,
 		onFolderChange,
+		label,
 	} = props;
 
 	const [selectedFolder, setSelectedFolder] = React.useState<iSimplyFolder>({folderName: '', id: ''});
@@ -47,7 +49,7 @@ const SelectBasic = (props: iSelectBasic) => {
 	return (
 		<Box sx={{ minWidth: 100 }}>
 		<FormControl fullWidth>
-			<InputLabel id="select-basic-label">{'Folder'}</InputLabel>
+			<InputLabel id="select-basic-label">{label ?? 'Folder'}</InputLabel>
 			<Select labelId="select-basic-label" id="select-basic" value={selectedFolder.folderName} label="Folder" onChange={handleChange}>
 				{menuItems}
 			</Select>
