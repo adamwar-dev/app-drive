@@ -5,11 +5,13 @@ import FolderCopyTwoToneIcon from '@mui/icons-material/FolderCopyTwoTone';
 import MyTextField from '../../components/TextField';
 import FolderItem from '../../components/FolderItem';
 import SimplyImage from '../../components/SimplyImage';
-import { GalleryDataProvider, iFolderData } from '../../data/GalleryDataProvider';
+import { GalleryDataProvider, iFolderData, iSimplyFolder } from '../../data/GalleryDataProvider';
 import { createImage } from '../../components/Utils';
 import Loader from '../../components/Loader';
 import CustomModal, { iCustomModal } from '../../components/CustomModal';
 import { useParams } from 'react-router-dom';
+import { ImageDataProvider, iReceivedImage } from '../../data/ImageDataProvider';
+import SelectBasic from '../../components/SelectBasic';
 
 const Folder = () => {
 
@@ -21,7 +23,17 @@ const Folder = () => {
         console.log(parentId, folderId);
 		if (token) {
 			getFolder(token, folderId ?? '');
+			getTagList(token);
 			setJwtToken(localStorage.getItem('jwtToken') ?? '');
+		} else {
+			setModal({
+				isModal: true,
+				action: 'error',
+				actionText: '',
+				exitText: 'Go to login page',
+				exitLink: '/',
+				redirect: true,
+			});
 		}
 	}, []);
 
@@ -31,6 +43,36 @@ const Folder = () => {
 		folders: [],
 		images: [],
 	});
+
+	// filtering
+
+	const [filterMethod, setFilterMethod] = React.useState<iSimplyFolder>({folderName: 'All', id: '1'});
+	const [tagList, setTagList] = React.useState<iSimplyFolder[]>([]);
+	const [filterTag, setFilterTag] = React.useState<iSimplyFolder>({folderName: '', id: ''});
+	const [filterText, setFilterText] = React.useState('');
+
+	const filter = () => {
+		if (filterMethod.id === '1') {
+
+			getFolder(jwtToken, folderId ?? '');
+		} else if (filterMethod.id === '2') {
+
+			getByName();
+		} else if (filterMethod.id === '3') {
+
+			getByDate(true);
+		} else if (filterMethod.id === '4') {
+
+			getByDate(false);
+		} else if (filterMethod.id === '5') {
+
+			getByTag();
+		}
+	}
+
+	useEffect(() => {
+		setFilterTag({folderName: '', id: ''});
+	}, [filterMethod]);
 
 	const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 	const open = Boolean(anchorEl);
@@ -47,12 +89,99 @@ const Folder = () => {
 		redirect: false,
 	});
 
+	const getTagList = (jwtToken: string) => {
+		ImageDataProvider.getTagFolder(jwtToken)
+		.then((response) => {
+			if (typeof response === typeof tagList) {
+				setTagList(response as iSimplyFolder[]);
+			} else {
+				setModal({
+					isModal: true,
+					action: 'error',
+					actionText: '',
+					exitText: 'Back to main page',
+					exitLink: '/mainPage',
+					redirect: true,
+				});
+			}
+		});
+	}
+
 	const getFolder = (jwtToken: string, folderId: string) => {
 		setLoader(true);
 		GalleryDataProvider.getFolder(jwtToken, folderId)
 		.then((response) => {
 			if (typeof response === typeof folder) {
 				setFolder(response as iFolderData);
+			} else {
+				setModal({
+					isModal: true,
+					action: 'error',
+					actionText: '',
+					exitText: 'Back to main page',
+					exitLink: '/mainPage',
+					redirect: true,
+				});
+			}
+			setLoader(false);
+		});
+	}
+
+	const getByTag = () => {
+		setLoader(true);
+		ImageDataProvider.getByTag(jwtToken, folderId ?? '', filterTag.id)
+		.then((response) => {
+			if (typeof response === typeof folder.images) {
+				setFolder(prevState => ({
+					...prevState,
+					images: response as iReceivedImage[],
+				}));
+			} else {
+				setModal({
+					isModal: true,
+					action: 'error',
+					actionText: '',
+					exitText: 'Back to main page',
+					exitLink: '/mainPage',
+					redirect: true,
+				});
+			}
+			setLoader(false);
+		});
+	}
+
+	const getByName = () => {
+		setLoader(true);
+		ImageDataProvider.getByText(jwtToken, folderId ?? '', filterText)
+		.then((response) => {
+			if (typeof response === typeof folder.images) {
+				setFolder(prevState => ({
+					...prevState,
+					images: response as iReceivedImage[],
+				}));
+			} else {
+				setModal({
+					isModal: true,
+					action: 'error',
+					actionText: '',
+					exitText: 'Back to main page',
+					exitLink: '/mainPage',
+					redirect: true,
+				});
+			}
+			setLoader(false);
+		});
+	}
+
+	const getByDate = (isLatest: boolean) => {
+		setLoader(true);
+		ImageDataProvider.getByDate(jwtToken, folderId ?? '', isLatest)
+		.then((response) => {
+			if (typeof response === typeof folder.images) {
+				setFolder(prevState => ({
+					...prevState,
+					images: response as iReceivedImage[],
+				}));
 			} else {
 				setModal({
 					isModal: true,
@@ -134,9 +263,8 @@ const Folder = () => {
 	  };
 
 	const renderFolders = folder.folders.map((nestedFolder) => (
-		<Grid item xs={12} sm={6} md={4}>
+		<Grid key={'folder' + nestedFolder.id} item xs={12} sm={6} md={4}>
 			<FolderItem
-				key={nestedFolder.id}
 				name={nestedFolder.folderName}
 				id={nestedFolder.id}
 				parentFolderId={folderId ?? ''}
@@ -147,9 +275,8 @@ const Folder = () => {
 	));
 
 	const renderImages = folder.images.map((image , index) => (
-		<Grid item xs={12} sm={6} md={4}>
-			<SimplyImage
-				key={image.id}
+		<Grid key={'image' + image.id} item xs={12} sm={6} md={4}>
+			<SimplyImage			
 				title={image.title}
 				id={(image.id)}
 				folderId={image.folderId}
@@ -211,6 +338,46 @@ const Folder = () => {
 						<Button fullWidth onClick={onRaportClick} variant="contained" sx={{height: '56px'}}>
 							{'Raport'}
 						</Button>
+					</Grid>
+					<Grid item xs={3}>
+						<SelectBasic
+							folders={[
+								{folderName: 'All', id: '1'},
+								{folderName: 'Text', id: '2'},
+								{folderName: 'From the latest', id: '3'},
+								{folderName: 'From the oldest', id: '4'},
+								{folderName: 'Selected tag', id: '5'}
+							]}
+							onFolderChange={setFilterMethod}
+						/>
+					</Grid>
+					{filterMethod.id === '2' &&
+						<Grid item xs={6}>
+							<MyTextField
+								id={'text'} 
+								label={'Text'} 
+								fullwidth={true}
+								value={filterText}
+								onChange={setFilterText}
+							/>
+						</Grid>
+					}
+					{filterMethod.id === '5' &&
+						<Grid item xs={6}>
+							<SelectBasic
+								folders={tagList}
+								onFolderChange={setFilterTag}
+								label={'Tag'}
+							/>
+						</Grid>
+					}
+					<Grid item xs={filterMethod.id === '5' || filterMethod.id === '2' ? 3 : 9}>
+						<Button fullWidth disabled={(filterMethod.id === '2' && filterText === '') || (filterMethod.id === '5' && filterTag.id === '')} onClick={filter} variant="contained" sx={{height: '56px'}}>
+							{'Filter'}
+						</Button>
+					</Grid>
+					<Grid item xs={12}>
+						<hr style={{ color: '#5cabe1' }} />
 					</Grid>
 					<Grid item xs={12}>
 						<hr style={{ color: '#5cabe1' }} />

@@ -8,15 +8,6 @@ import Loader from '../../components/Loader';
 import CustomModal, { iCustomModal } from '../../components/CustomModal';
 import { useParams } from 'react-router-dom';
 
-const onSaveClick = () => {
-	var a = document.createElement('a');
-	a.href = NO_IMAGE;
-	a.download = "output.png";
-	document.body.appendChild(a);
-	a.click();
-	document.body.removeChild(a);
-}
-
 const Photo = () => {
 
 	const [jwtToken, setJwtToken] = useState('');
@@ -48,6 +39,15 @@ const Photo = () => {
 		if (token) {
 			getImage(token);
 			setJwtToken(localStorage.getItem('jwtToken') ?? '');
+		} else {
+			setModal({
+				isModal: true,
+				action: 'error',
+				actionText: '',
+				exitText: 'Go to login page',
+				exitLink: '/',
+				redirect: true,
+			});
 		}
 	}, []);
 
@@ -123,6 +123,10 @@ const Photo = () => {
 			}
 		})
 	}
+
+	function downloadUrl() {
+		Object.assign(document.createElement('a'), { href: createImage(image.image), download: image.title }).click();
+	}
  
 	const renderTags = image.tags.map((tag, index) => (
 		<Grid item xs={6} sm={4} md={3}>
@@ -163,7 +167,7 @@ const Photo = () => {
 						</Card>
 					</Grid>
 					<Grid item xs={2}>
-						<Button fullWidth onClick={onSaveClick} variant="contained" sx={{height: '56px', mb: '30px'}}>
+						<Button fullWidth onClick={downloadUrl} variant="contained" sx={{height: '56px', mb: '30px'}}>
 							{'Save'}
 						</Button>
 						<Button fullWidth href={'/gallery/folder/' + folderId + '/image/' + id + '/edit'} variant="contained" sx={{height: '56px', mb: '30px'}}>

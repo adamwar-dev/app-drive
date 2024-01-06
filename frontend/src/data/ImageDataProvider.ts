@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { iSimplyFolder } from './GalleryDataProvider';
 
 axios.defaults.withCredentials = true;
 
@@ -166,6 +167,138 @@ export class ImageDataProvider {
 		});
 	}
 
+	public static getByTag(token: string, folderId: string, tagId: string ) {
+		let status = 0;
+		return axios.post(`http://localhost:4000/api/image/GetByCategory`, {
+			UserToken: token,
+			FolderId: folderId,
+			CategoryId: tagId
+		}, {
+			headers: {
+				'Accept' : 'application/json',
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			}
+		}).then(res => {
+			console.log(res);
+			console.log(res.data);
+			const data = res.data;
+			const images: iReceivedImage[] = [];
+			data.forEach((item: {
+				folderId: any;
+				id: any;
+				imageData: any;
+				imageDateOfCreate: any;
+				imageDescription: any;
+				imageTitle: any;
+			}) => {
+				const image: iReceivedImage = {
+					folderId: item.folderId,
+					id: item.id,
+					image: item.imageData,
+					date: item.imageDateOfCreate,
+					description: item.imageDescription,
+					title: item.imageTitle,
+					tags: [],
+				}
+				images.push(image);
+			});
+			console.log(images);
+			return images;
+		}).catch(er => {
+			console.log(er);
+			return status;
+		});
+	}
+
+	public static getByDate(token: string, folderId: string, isLatest: boolean ) {
+		let status = 0;
+		return axios.post(`http://localhost:4000/api/image/GetByDate`, {
+			UserToken: token,
+			FolderId: folderId,
+			IsLastest: isLatest
+		}, {
+			headers: {
+				'Accept' : 'application/json',
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			}
+		}).then(res => {
+			console.log(res);
+			console.log(res.data);
+			const data = res.data;
+			const images: iReceivedImage[] = [];
+			data.forEach((item: {
+				folderId: any;
+				id: any;
+				imageData: any;
+				imageDateOfCreate: any;
+				imageDescription: any;
+				imageTitle: any;
+			}) => {
+				const image: iReceivedImage = {
+					folderId: item.folderId,
+					id: item.id,
+					image: item.imageData,
+					date: item.imageDateOfCreate,
+					description: item.imageDescription,
+					title: item.imageTitle,
+					tags: [],
+				}
+				images.push(image);
+			});
+			console.log(images);
+			return images;
+		}).catch(er => {
+			console.log(er);
+			return status;
+		});
+	}
+
+	public static getByText(token: string, folderId: string, text: string ) {
+		let status = 0;
+		return axios.post(`http://localhost:4000/api/image/GetByText`, {
+			UserToken: token,
+			FolderId: folderId,
+			Text: text
+		}, {
+			headers: {
+				'Accept' : 'application/json',
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			}
+		}).then(res => {
+			console.log(res);
+			console.log(res.data);
+			const data = res.data;
+			const images: iReceivedImage[] = [];
+			data.forEach((item: {
+				folderId: any;
+				id: any;
+				imageData: any;
+				imageDateOfCreate: any;
+				imageDescription: any;
+				imageTitle: any;
+			}) => {
+				const image: iReceivedImage = {
+					folderId: item.folderId,
+					id: item.id,
+					image: item.imageData,
+					date: item.imageDateOfCreate,
+					description: item.imageDescription,
+					title: item.imageTitle,
+					tags: [],
+				}
+				images.push(image);
+			});
+			console.log(images);
+			return images;
+		}).catch(er => {
+			console.log(er);
+			return status;
+		});
+	}
+
 	/*
 	 * Tags
 	 */
@@ -238,6 +371,34 @@ export class ImageDataProvider {
 		}).catch(error => {
 			console.log(error);
 			status = error.status;
+			return status;
+		});
+	}
+
+	public static getTagFolder(token: string ) {
+		let status = 0;
+		return axios.post(`http://localhost:4000/api/category/GetTags`, {
+			UserToken: token,
+		}, {
+			headers: {
+				'Accept' : 'application/json',
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			}
+		}).then(res => {
+			console.log(res);
+			const data = res.data;
+			const tags: iSimplyFolder[] = [];
+			data.forEach((item: { categoryName: any; id: any; }) => {
+				const tag: iSimplyFolder = {
+					folderName: item.categoryName,
+					id: item.id
+				}
+				tags.push(tag);
+			});
+			return tags;
+		}).catch(er => {
+			console.log(er);
 			return status;
 		});
 	}

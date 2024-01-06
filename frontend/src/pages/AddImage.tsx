@@ -48,6 +48,15 @@ const AddImage = () => {
 		if (token) { 
 			getData(token);
 			setJwtToken(token);
+		} else {
+			setModal({
+				isModal: true,
+				action: 'error',
+				actionText: '',
+				exitText: 'Go to login page',
+				exitLink: '/',
+				redirect: true,
+			});
 		}
 	}, []);
 
