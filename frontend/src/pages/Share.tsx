@@ -15,11 +15,7 @@ const Share = () => {
     const { folderId } = useParams();
 
 	useEffect(() => {
-		const token = localStorage.getItem('jwtToken');
-		if (token) {
-			getFolder(token, folderId ?? '');
-			setJwtToken(localStorage.getItem('jwtToken') ?? '');
-		}
+		getFolder(folderId ?? '');
 	}, []);
 
 	const [folder, setFolder] = React.useState<iFolderData>({
@@ -40,9 +36,9 @@ const Share = () => {
 		redirect: false,
 	});
 
-	const getFolder = (jwtToken: string, folderId: string) => {
+	const getFolder = (folderId: string) => {
 		setLoader(true);
-		GalleryDataProvider.getFolder(jwtToken, folderId)
+		GalleryDataProvider.getShareFolder(folderId)
 		.then((response) => {
 			if (typeof response === typeof folder) {
 				setFolder(response as iFolderData);
@@ -51,8 +47,8 @@ const Share = () => {
 					isModal: true,
 					action: 'error',
 					actionText: '',
-					exitText: 'Back to main page',
-					exitLink: '/mainPage',
+					exitText: 'Back to login page',
+					exitLink: '/',
 					redirect: true,
 				});
 			}
