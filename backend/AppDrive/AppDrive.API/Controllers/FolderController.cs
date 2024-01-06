@@ -34,6 +34,15 @@ namespace AppDrive.API.Controllers
             else return NotFound();
         }
 
+        [HttpPost("GetShareFolder")]
+        public IActionResult GetShareFolder(GetFolderRequest request)
+        {
+            var response = _folderService.GetShareFolder(request);
+
+            if (response != null) return Ok(response);
+            else return NotFound();
+        }
+
         [HttpPost("AddFolder")]
         public IActionResult AddFolder(AddFolderRequest request)
         {

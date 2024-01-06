@@ -14,6 +14,7 @@ namespace AppDrive.API.Services
         public IEnumerable<GetMainFoldersResponse> GetMainFolder(GetMainFoldersRequest request);
         public IEnumerable<GetFolderListResponse> GetFolderList(GetFoldersListRequest request);
         public FolderStatsResponse GetFolderStats(FolderStatsRequest request);
+        public GetFolderResponse GetShareFolder(GetFolderRequest request);
     }
     public class FolderService : IFolderService
     {
@@ -71,6 +72,20 @@ namespace AppDrive.API.Services
             {
                 folder.InverseParentFolder = _context.Folders.Where(x => x.AccountId == accountId && x.ParentFolderId == request.FolderId).ToList();
                 folder.Images = _context.Images.Where(x => x.AccountId == accountId && x.FolderId == request.FolderId).ToList();
+            }
+
+            var response = _mapper.Map<GetFolderResponse>(folder);
+
+            return response;
+        }
+
+        public GetFolderResponse GetShareFolder(GetFolderRequest request)
+        {
+            var folder = _context.Folders.FirstOrDefault(x => x.Id == request.FolderId);
+
+            if (folder != null)
+            {
+                folder.Images = _context.Images.Where(x => x.FolderId == request.FolderId).ToList();
             }
 
             var response = _mapper.Map<GetFolderResponse>(folder);
