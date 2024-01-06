@@ -13,6 +13,8 @@ namespace AppDrive.API.Services
         public GetImageResponse GetImage(GetImageRequest request);
         public Image EditImage(EditImageRequest request);
         public IEnumerable<GetImageResponse> GetByCategory(GetByCategoryRequest request);
+        public IEnumerable<GetImageResponse> GetByName(GetByTextRequest request);
+        public IEnumerable<GetImageResponse> GetByDate(GetByDateRequest request);
     }
 
     public class ImageService : IImageService
@@ -125,6 +127,39 @@ namespace AppDrive.API.Services
             var response = _mapper.Map<IList<GetImageResponse>>(images);
             return response;
         }
+
+        public IEnumerable<GetImageResponse> GetByName(GetByTextRequest request)
+        {
+            var accountId = _jwtUtils.ValidateJwtToken(request.UserToken);
+
+            if (accountId == null)
+            {
+                return null;
+            }
+
+            var images = _context.Images.Where(x => x.AccountId == accountId && x.FolderId == request.FolderId && x.ImageTitle.Contains(request.Text)).ToList();
+
+            var response = _mapper.Map<IList<GetImageResponse>>(images);
+            return response;
+        }
+
+        public IEnumerable<GetImageResponse> GetByDate(GetByDateRequest request)
+        {
+            var accountId = _jwtUtils.ValidateJwtToken(request.UserToken);
+
+            if (accountId == null)
+            {
+                return null;
+            }
+
+            var images = request.IsLastest
+                ? _context.Images.Where(x => x.AccountId == accountId && x.FolderId == request.FolderId).OrderBy(x => x.ImageDateOfCreate).ToList()
+                : _context.Images.Where(x => x.AccountId == accountId && x.FolderId == request.FolderId).OrderByDescending(x => x.ImageDateOfCreate).ToList();
+
+            var response = _mapper.Map<IList<GetImageResponse>>(images);
+            return response;
+        }
+
 
         public Image EditImage(EditImageRequest request)
         {

@@ -59,5 +59,23 @@ namespace AppDrive.API.Controllers
             if (response != null) return Ok(response);
             else return NotFound();
         }
+
+        [HttpPost("GetByText")]
+        public IActionResult GetByText(GetByTextRequest request)
+        {
+            var response = _imageService.GetByName(request);
+
+            if (response != null) return Ok(response);
+            else return NotFound();
+        }
+
+        [HttpPost("GetByDate")]
+        public IActionResult GetByDate(GetByDateRequest request)
+        {
+            var response = _imageService.GetByDate(request);
+
+            if (response != null) return Ok(response);
+            else return NotFound();
+        }
     }
 }
