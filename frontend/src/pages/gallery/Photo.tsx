@@ -39,6 +39,15 @@ const Photo = () => {
 		if (token) {
 			getImage(token);
 			setJwtToken(localStorage.getItem('jwtToken') ?? '');
+		} else {
+			setModal({
+				isModal: true,
+				action: 'error',
+				actionText: '',
+				exitText: 'Go to login page',
+				exitLink: '/',
+				redirect: true,
+			});
 		}
 	}, []);
 

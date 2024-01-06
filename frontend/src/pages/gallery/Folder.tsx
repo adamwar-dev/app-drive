@@ -22,6 +22,15 @@ const Folder = () => {
 		if (token) {
 			getFolder(token, folderId ?? '');
 			setJwtToken(localStorage.getItem('jwtToken') ?? '');
+		} else {
+			setModal({
+				isModal: true,
+				action: 'error',
+				actionText: '',
+				exitText: 'Go to login page',
+				exitLink: '/',
+				redirect: true,
+			});
 		}
 	}, []);
 

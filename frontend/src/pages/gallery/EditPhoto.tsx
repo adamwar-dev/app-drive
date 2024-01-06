@@ -46,6 +46,15 @@ const EditPhoto = () => {
 			getTagList(token);
 			getFolderList(token);
 			setLoader(false);
+		} else {
+			setModal({
+				isModal: true,
+				action: 'error',
+				actionText: '',
+				exitText: 'Go to login page',
+				exitLink: '/',
+				redirect: true,
+			});
 		}
 	}, []);
 
