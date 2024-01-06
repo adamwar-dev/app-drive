@@ -50,5 +50,14 @@ namespace AppDrive.API.Controllers
             if (response != null) return Ok();
             else return NotFound();
         }
+
+        [HttpPost("GetByCategory")]
+        public IActionResult GetByCategory(GetByCategoryRequest request)
+        {
+            var response = _imageService.GetByCategory(request);
+
+            if (response != null) return Ok(response);
+            else return NotFound();
+        }
     }
 }
