@@ -313,7 +313,7 @@ const Folder = () => {
 						/>
 					</Grid>
 					<Grid item xs={3}>
-						<Button fullWidth onClick={onAddFolderClick} variant="contained" sx={{height: '56px', backgroundColor: '#00b4d8'}}>
+						<Button fullWidth onClick={onAddFolderClick} disabled={newFolder.length === 0} variant="contained" sx={{height: '56px', backgroundColor: '#00b4d8'}}>
 							{'Add'}
 						</Button>
 					</Grid>

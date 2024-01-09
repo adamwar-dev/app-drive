@@ -155,7 +155,7 @@ const Gallery = () => {
 						/>
 					</Grid>
 					<Grid item xs={3}>
-						<Button fullWidth onClick={onAddFolderClick} variant="contained" sx={{height: '56px'}}>
+						<Button fullWidth onClick={onAddFolderClick} disabled={newFolder.length === 0} variant="contained" sx={{height: '56px'}}>
 							{'Add'}
 						</Button>
 					</Grid>
