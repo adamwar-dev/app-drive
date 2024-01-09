@@ -1,6 +1,7 @@
 ﻿using AppDrive.API.Authorization;
 using AppDrive.API.Entities;
 using AppDrive.API.Models.Accounts;
+using AppDrive.API.Models.Folders;
 using AppDrive.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -93,6 +94,16 @@ namespace AppDrive.API.Controllers
         {
             _accountService.ValidateResetToken(model);
             return Ok(new { message = "Token is valid" });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("get-account-info")]
+        public IActionResult GetAccountInfo(GetAccountInfoRequest request)
+        {
+            var response = _accountService.GetAccountInfo(request);
+
+            if (response != null) return Ok(response);
+            else return NotFound();
         }
 
         [AllowAnonymous]

@@ -17,6 +17,8 @@ namespace AppDrive.API.Helpers
 
             CreateMap<ExternalAuthRequest, Account>();
 
+            CreateMap<Account, GetAccountInfoResponse>();
+
             CreateMap<RegisterRequest, Account>();
 
             CreateMap<CreateRequest, Account>();

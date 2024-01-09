@@ -24,6 +24,7 @@ namespace AppDrive.API.Services
         void ValidateResetToken(ValidateResetTokenRequest model);
         void ResetPassword(ResetPasswordRequest model);
         IEnumerable<AccountResponse> GetAll();
+        GetAccountInfoResponse GetAccountInfo(GetAccountInfoRequest request);
         AccountResponse GetById(int id);
         AccountResponse Create(CreateRequest model);
         AccountResponse Update(int id, UpdateRequest model);
@@ -145,6 +146,8 @@ namespace AppDrive.API.Services
             account.Role = isFirstAccount ? Role.Admin : Role.User;
             account.Created = DateTime.UtcNow;
             account.VerificationToken = generateVerificationToken();
+            account.ExternalId = "no";
+            account.ExternalType = "no";
 
             // hash password
             account.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
@@ -159,7 +162,7 @@ namespace AppDrive.API.Services
 
         public void VerifyEmail(string token)
         {
-            var account = _context.Accounts.SingleOrDefault(x => Convert.ToString(x.VerificationToken) == token);
+            var account = _context.Accounts.SingleOrDefault(x => x.VerificationToken != null && Convert.ToString(x.VerificationToken) == token);
 
             if (account == null)
                 throw new AppException("Verification failed");
@@ -288,8 +291,8 @@ namespace AppDrive.API.Services
         private Account getAccountByResetToken(string token)
         {
             var account = _context.Accounts.SingleOrDefault(x =>
-                Convert.ToString(x.ResetToken) == token && x.ResetTokenExpires > DateTime.UtcNow);
-            if (account == null) throw new AppException("Invalid token");
+                Convert.ToString(x.ResetToken) == token);
+            if (account == null || account.ResetTokenExpires < DateTime.UtcNow) throw new AppException("Invalid token");
             return account;
         }
 
@@ -313,7 +316,7 @@ namespace AppDrive.API.Services
             var token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
 
             // ensure token is unique by checking against db
-            var tokenIsUnique = !_context.Accounts.Any(x => x.ResetToken == token);
+            var tokenIsUnique = !_context.Accounts.Any(x => Convert.ToString(x.ResetToken) == token);
             if (!tokenIsUnique)
                 return generateResetToken();
 
@@ -489,6 +492,15 @@ namespace AppDrive.API.Services
             var response = _mapper.Map<AuthenticateResponse>(account);
             response.JwtToken = jwtToken;
             response.RefreshToken = refreshToken.Token;
+            return response;
+        }
+
+        public GetAccountInfoResponse GetAccountInfo(GetAccountInfoRequest request)
+        {
+            var accountId = _jwtUtils.ValidateJwtToken(request.UserToken);
+            var info = _context.Accounts.SingleOrDefault(x => x.Id == accountId);
+            var response = _mapper.Map<GetAccountInfoResponse>(info);
+
             return response;
         }
     }

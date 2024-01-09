@@ -3,19 +3,49 @@ import React from 'react';
 import Navbar from '../../components/Navbar';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import AlternateEmailRoundedIcon from '@mui/icons-material/AlternateEmailRounded';
+import Loader from '../../components/Loader';
+import { AuthenticationDataProvider } from '../../data/AuthenticationDataProvider';
 
-interface iPrivacy {
-	token ?: string;
-}
+const Privacy = () => {
+	const [jwtToken, setJwtToken] = React.useState('');
+	const [loader, setLoader] = React.useState(true);
 
-const Privacy = (props: iPrivacy) => {
 	const [email, changeEmail] = React.useState('');
+	const [allowResetPassword, setAllowResetPassword] = React.useState(true);
+	const [passwordMessage, setPasswordMessage] = React.useState(false);
 
-	const {
-		token,
-	} = props;
+	React.useEffect(() => {
+		setLoader(true);
+		const token = localStorage.getItem('jwtToken') ?? '';
+		setJwtToken(token);
+		if (token) {
+			AuthenticationDataProvider.getProfileInfo(token)
+			.then(data => {
+				changeEmail(data.email);
+				setAllowResetPassword(data.externalType == 'no');
+			})
+			setLoader(false);
+		}
+	}, []);
 
-	return (
+	const resetPassword = () => {
+		AuthenticationDataProvider.resetPasswordRequest(email)
+		.then(() => {
+			setPasswordMessage(true);
+		});
+	}
+
+	const logout = () => {
+		localStorage.removeItem('jwtToken');
+		window.location.replace('/');
+	}
+
+	return loader ? (
+		<React.Fragment>
+			<Navbar />
+			<Loader />
+		</React.Fragment>
+		) : (
 		<React.Fragment>
 			<Navbar  />
 			<Box sx={{ flexGrow: 1, width: '80%', mx: 'auto' }}>
@@ -49,18 +79,23 @@ const Privacy = (props: iPrivacy) => {
 							/>
 						</FormControl>
 					</Grid>
+					{allowResetPassword &&
+						<Grid item xs={12}>
+							<Button onClick={resetPassword} variant="contained" sx={{height: '56px', width: '330px', backgroundColor: '#00b4d8'}}>
+								{'Reset Password'}
+							</Button>
+						</Grid>
+					}
+					{passwordMessage &&
+						<Grid item xs={12}>
+							<Typography fontSize={'16px'} component="h1" variant="h5" sx={{color: '#27db17', mt: '20px'}}>
+								{'Check your email. Reset Password mail has been send.'}
+							<br/>
+							</Typography>
+						</Grid>
+                	}
 					<Grid item xs={12}>
-						<Button  variant="contained" sx={{height: '56px', width: '330px', backgroundColor: '#00b4d8'}}>
-							{'Reset Password'}
-						</Button>
-					</Grid>
-					<Grid item xs={12}>
-						<Button  variant="contained" sx={{height: '56px', width: '330px', backgroundColor: '#0aa1dd'}}>
-							{'Delete Account'}
-						</Button>
-					</Grid>
-					<Grid item xs={12}>
-						<Button href='/' variant="contained" sx={{height: '56px', width: '330px'}}>
+						<Button onClick={logout} variant="contained" sx={{height: '56px', width: '330px'}}>
 							{'Logout'}
 						</Button>
 					</Grid>

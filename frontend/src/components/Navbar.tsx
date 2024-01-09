@@ -28,7 +28,12 @@ export default function Navbar(props: iNavbar) {
 		handleClose();
 		event.preventDefault();
 		const { myValue } = event.currentTarget.dataset;
-		window.location.replace(myValue);
+		if (myValue === 'logout') {
+			localStorage.removeItem('jwtToken');
+			window.location.replace('/');
+		} else {
+			window.location.replace(myValue);
+		}
 	};
 
 	const { 
@@ -95,7 +100,7 @@ export default function Navbar(props: iNavbar) {
 					</MenuItem>
 					<MenuItem 
 						onClick={handleClick} 
-						data-my-value={'/'}
+						data-my-value={'logout'}
 					>
 						{'Logout'}
 					</MenuItem>

@@ -184,7 +184,9 @@ const SignUp = () => {
 						</Link>
 					</Grid>
 					{loader &&
-						<Loader/>
+					<Grid item xs={8} mx={'auto'}>
+						<Loader mt='5px'/>
+					</Grid>
 					}
 					{error &&
 						<Grid item xs={8} mx={'auto'}>
