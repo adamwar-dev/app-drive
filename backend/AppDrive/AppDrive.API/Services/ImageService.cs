@@ -51,7 +51,14 @@ namespace AppDrive.API.Services
                 newImage.ImageDescription = request.Description;
                 newImage.ImageData = image;
                 newImage.FolderId = request.FolderId;
-                newImage.ImageDateOfCreate = request.Date;
+                if (request.Date == null)
+                {
+                    newImage.ImageDateOfCreate = getImageDateTime(image);
+                }
+                else
+                {
+                    newImage.ImageDateOfCreate = request.Date;
+                }
                 _context.Images.Add(newImage);
                 _context.SaveChanges();
 
@@ -68,6 +75,32 @@ namespace AppDrive.API.Services
             }
             IEnumerable<Image> response = newImages;
             return response;
+        }
+
+        DateTime getImageDateTime(byte[] imageBytes)
+        {
+            try
+            {
+                using (MemoryStream memoryStream = new MemoryStream(imageBytes))
+                {
+                    using (System.Drawing.Image image  = System.Drawing.Image.FromStream(memoryStream))
+                    {
+                        System.Drawing.Imaging.PropertyItem dateTakenProperty = image.GetPropertyItem(0x0132); // ID dla daty wykonania zdjęcia
+                        if (dateTakenProperty != null)
+                        {
+                            string dateString = System.Text.Encoding.UTF8.GetString(dateTakenProperty.Value);
+                            return DateTime.ParseExact(dateString.TrimEnd('\0'), "yyyy:MM:dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
+            // Jeśli nie udało się znaleźć metadanych, zwróć aktualną datę i czas
+            return DateTime.Now;
         }
 
         public Image DeleteImage(DeleteImageRequest request)

@@ -229,7 +229,7 @@ const AddImage = () => {
 					<UploadImageButton multiple={true} handleImages={setImages} />
 				</Grid>
 				<Grid item xs={12} sm={12} md={4} textAlign="center">
-					<SaveButton onClick={onSaveClick} disabled={images === undefined || titleError || folderError || date === null} />
+					<SaveButton onClick={onSaveClick} disabled={images === undefined || titleError || folderError} />
 				</Grid>
 				</Grid>
 			</Box>
