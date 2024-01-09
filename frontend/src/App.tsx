@@ -15,6 +15,7 @@ import EditPhoto from './pages/gallery/EditPhoto';
 import AddImage from './pages/AddImage';
 import Raport from './pages/Raport';
 import Share from './pages/Share';
+import ResetPassword from './pages/profile/ResetPassword';
 
 function App() {
 	return (
@@ -28,6 +29,7 @@ function App() {
 				<Route path={'/profile'} element={<Profile/>} />
 				<Route path={'/profile/tags'} element={<Tags/>} />
 				<Route path={'/profile/privacy'} element={<Privacy/>} />
+				<Route path={'/reset/:token'} element={<ResetPassword/>} />
 				<Route path={'/addPicture'} element={<AddImage/>} />
 				<Route path={'/gallery'} element={<Gallery/>} />
 				<Route path={'/gallery/:parentId/folder/:folderId'} element={<Folder/>} />

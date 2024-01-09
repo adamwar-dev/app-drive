@@ -28,10 +28,37 @@ const SignIn = () => {
 
     const [emailError, setEmailError] = React.useState(true);
 
+	type DataCredential = {
+		aud: string,
+		azp: string,
+		email: string,
+		email_verified: boolean,
+		exp: number,
+		family_name: string,
+		given_name: string,
+		iss: string,
+		jti: string,
+		name: string,
+		nbf: number,
+		picture: string,
+		sub: string
+	}
+
 	/** Google Stuff */
 	const handleCallbackResponse = (response: any) => {
-		const userObject = jwtDecode(response.credential)
-		console.log(userObject);
+		const crendentials: DataCredential = jwtDecode(response.credential)
+		setLoader(true);
+		return AuthenticationDataProvider.externalAuth(crendentials.given_name ?? '', crendentials.email ?? '', crendentials.sub ?? '', 'Google')
+		.then(jwtToken => {
+			console.log(jwtToken);
+			if (jwtToken) {
+				window.location.replace("/mainPage");
+				localStorage.setItem('jwtToken', jwtToken);
+			} else {
+				setLoader(false);
+				setError(true);
+			}
+		});
 	}
 
 	React.useEffect(() => {
