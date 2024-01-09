@@ -15,6 +15,7 @@ namespace AppDrive.API.Services
     public interface IAccountService
     {
         AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress);
+        AuthenticateResponse ExternalAuth(ExternalAuthRequest model, string ipAddress);
         AuthenticateResponse RefreshToken(string token, string ipAddress);
         void RevokeToken(string token, string ipAddress);
         void Register(RegisterRequest model, string origin);
@@ -433,6 +434,62 @@ namespace AppDrive.API.Services
                 html: $@"<h4>Reset Password Email</h4>
                         {message}"
             );
+        }
+
+        public AuthenticateResponse ExternalAuth(ExternalAuthRequest model, string ipAddress)
+        {
+            if (_context.Accounts.Any(x => Convert.ToString(x.Email) == model.Email))
+            {
+                var existingAccount = _context.Accounts.SingleOrDefault(x => Convert.ToString(x.Email) == model.Email);
+
+                // validate
+                if (existingAccount == null || model.ExternalId != existingAccount.ExternalId || model.Email != existingAccount.Email)
+                    throw new AppException("Something went wrong.");
+
+                // authentication successful so generate jwt and refresh tokens
+                var jwtTokenLogin = _jwtUtils.GenerateJwtToken(existingAccount);
+                var refreshTokenLogin = _jwtUtils.GenerateRefreshToken(ipAddress);
+                existingAccount.RefreshTokens.Add(refreshTokenLogin);
+
+                // remove old refresh tokens from account
+                removeOldRefreshTokens(existingAccount);
+
+                // save changes to db
+                _context.Update(existingAccount);
+                _context.SaveChanges();
+
+                var responseLogin = _mapper.Map<AuthenticateResponse>(existingAccount);
+                responseLogin.JwtToken = jwtTokenLogin;
+                responseLogin.RefreshToken = refreshTokenLogin.Token;
+                return responseLogin;
+            }
+
+            var account = _mapper.Map<Account>(model);
+
+            // first registered account is an admin
+            var isFirstAccount = _context.Accounts.Count() == 0;
+            account.AcceptTerms = true;
+            account.Role = isFirstAccount ? Role.Admin : Role.User;
+            account.Created = DateTime.UtcNow;
+            account.VerificationToken = generateVerificationToken();
+            account.Verified = DateTime.UtcNow;
+
+            // save account
+            _context.Accounts.Add(account);
+            _context.SaveChanges();
+
+            var jwtToken = _jwtUtils.GenerateJwtToken(account);
+            var refreshToken = _jwtUtils.GenerateRefreshToken(ipAddress);
+            account.RefreshTokens.Add(refreshToken);
+
+            // save changes to db
+            _context.Update(account);
+            _context.SaveChanges();
+
+            var response = _mapper.Map<AuthenticateResponse>(account);
+            response.JwtToken = jwtToken;
+            response.RefreshToken = refreshToken.Token;
+            return response;
         }
     }
 }

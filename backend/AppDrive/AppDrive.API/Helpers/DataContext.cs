@@ -55,6 +55,10 @@ namespace AppDrive.API.Helpers
                 entity.Property(e => e.VerificationToken).HasColumnType("text");
 
                 entity.Property(e => e.Verified).HasColumnType("text");
+
+                entity.Property(e=>e.ExternalType).HasColumnType("text");
+
+                entity.Property(e => e.ExternalId).HasColumnType("text");
             });
 
             modelBuilder.Entity<Category>(entity =>

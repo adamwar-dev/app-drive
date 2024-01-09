@@ -28,6 +28,15 @@ namespace AppDrive.API.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("external-auth")]
+        public ActionResult<AuthenticateResponse> ExternalAuthenticate(ExternalAuthRequest model)
+        {
+            var response = _accountService.ExternalAuth(model, ipAddress());
+            setTokenCookie(response.RefreshToken);
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
         [HttpPost("refresh-token")]
         public ActionResult<AuthenticateResponse> RefreshToken()
         {

@@ -29,6 +29,8 @@ namespace AppDrive.API.Entities
         public DateTime? PasswordReset { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Updated { get; set; }
+        public string ExternalId { get; set; }
+        public string ExternalType { get; set; }
 
         public virtual ICollection<Category> Categories { get; set; }
         public virtual ICollection<Folder> Folders { get; set; }
