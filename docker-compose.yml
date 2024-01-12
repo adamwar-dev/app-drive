@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # .NET API service
+  api:
+    build:
+      context: ./backend/AppDrive/AppDrive.API
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    networks:
+      - app-network
+
+  # Frontend service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
