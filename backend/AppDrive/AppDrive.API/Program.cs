@@ -7,6 +7,10 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(4000);
+});
 // Add services to the container.
 builder.Services.AddRazorPages();
 
