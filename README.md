@@ -1,102 +1,43 @@
-# Aplikacja app-drive
+## Project name and goal
+### App-drive
+The aim of the project is to create a photo management application in the form of a web application utilizing modern technologies. The service user will have the ability to create a personal account within the system, manage uploaded photos, and browse them based on specific categories.
 
-## Specyfikacja
+## Technologies
+- Frontend: React, TypeScript, Material UI, CSS
+- Backend: C#, .Net, EntityFramework
+- Database: SQL Server Express, SQL Server Management Studio
+- Docker
 
-Celem projektu jest stworzenie aplikacji do zarządzania zdjęciami w formie aplikacji webowej z wykorzystaniem nowoczesnych technologii. Użytkownik serwisu będzie miał możliwość utworzenia osobistego konta w systemie, zarządzania wstawionymi przez siebie zdjęciami oraz ich przeglądania według konkretnych kategorii.
+## Installation and Setup Instructions
+### Docker
 
-## Stos technologiczny
+Download Docker Desktop or Docker Engine
+
+In the terminal, from the directory containing the docker-compose.yml file, type `docker-compose up`.
+
+Open [http://localhost:3000](http://localhost:3000) to view client app it in your browser.
+Server application will be running at [http://localhost:4000](http://localhost:4000).
+
+// TO DO Database
+
 ### Frontend
-- [React](https://react.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Material UI](https://mui.com/)
-- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
+
+To install, you will need Node.js and npm globally installed on your machine.\
+After cloning the repository, navigate to the frontend directory and type `npm install` in the terminal to proceed with the installation.
+
+To start the server, use `npm start`.
+
+To visit the application, navigate to [http://localhost:3000](http://localhost:3000).
 
 ### Backend
-- [C#](https://learn.microsoft.com/pl-pl/dotnet/csharp/)
-- [.Net](https://learn.microsoft.com/pl-pl/dotnet/)
-- [EntityFramework](https://learn.microsoft.com/en-us/ef/)
 
-# Baza danych
-- [SQL Server Express](https://www.microsoft.com/pl-pl/sql-server/sql-server-downloads)
-- [SQL Server Management Studio](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16)
+To run the server application, you need to have ISS (Internet Information Services) and the .NET 6 framework installed on your machine.\
+We recommend installing Visual Studio and running the project directly from it.
 
-# Instrukcje
-## Frontend
+### Database
+//TODO
 
-### Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-### Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-### Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-## Backend - TODO
-
-### Autorzy
+## Authors
 
 - Piotr Czuczeło
 - Adam Warzecha
