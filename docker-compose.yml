@@ -1,17 +1,32 @@
 version: '3.8'
 
 services:
-  # .NET API service
+# SQL Server service
+  sql-server:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: YourStrong!Passw0rd
+      MSSQL_DBNAME: TAI_DB
+      MSSQL_PID: Express
+    networks:
+      - app-network
+# .NET API service
   api:
     build:
       context: ./backend/AppDrive/AppDrive.API
       dockerfile: Dockerfile
     ports:
       - "4000:4000"
+    depends_on:
+      - sql-server
     networks:
       - app-network
-
-  # Frontend service
+# Frontend service
   frontend:
     build:
       context: ./frontend

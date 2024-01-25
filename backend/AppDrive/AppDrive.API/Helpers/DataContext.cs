@@ -24,7 +24,7 @@ namespace AppDrive.API.Helpers
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=TAI_DB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=sql-server,1433;Database=TAI_DB;User Id=sa;Password=YourStrong!Passw0rd;");
             }
         }
 
