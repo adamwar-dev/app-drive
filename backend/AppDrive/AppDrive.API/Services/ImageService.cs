@@ -3,6 +3,7 @@ using AppDrive.API.Entities;
 using AppDrive.API.Helpers;
 using AppDrive.API.Models.Images;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 
 namespace AppDrive.API.Services
 {
@@ -83,15 +84,26 @@ namespace AppDrive.API.Services
             {
                 using (MemoryStream memoryStream = new MemoryStream(imageBytes))
                 {
-                    using (System.Drawing.Image image  = System.Drawing.Image.FromStream(memoryStream))
+                    SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> image = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(memoryStream);
+                    SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifProfile exif = image.Metadata.ExifProfile;
+
+                    if (exif != null)
                     {
-                        System.Drawing.Imaging.PropertyItem dateTakenProperty = image.GetPropertyItem(0x0132); // ID dla daty wykonania zdjęcia
-                        if (dateTakenProperty != null)
+                        foreach (var value in exif.Values)
                         {
-                            string dateString = System.Text.Encoding.UTF8.GetString(dateTakenProperty.Value);
-                            return DateTime.ParseExact(dateString.TrimEnd('\0'), "yyyy:MM:dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                            Console.WriteLine("EXIF Value: " + value);
+                            // Sprawdź, czy wartość jest datą
+                            if (value.Tag == SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag.DateTimeOriginal ||
+                                value.Tag == SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag.DateTime)
+                            {
+                                Console.WriteLine("Taking Exif Date");
+                                // Spróbuj sparsować wartość jako datę
+                                return DateTime.ParseExact(value.ToString(), "yyyy:MM:dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                            }
                         }
                     }
+
+                    Console.WriteLine("No Exif Date");
                 }
             }
             catch (Exception ex)
