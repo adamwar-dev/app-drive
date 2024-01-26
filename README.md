@@ -38,7 +38,7 @@ To visit the application, navigate to [http://localhost:3000](http://localhost:3
 To run the server application, you need to have ISS (Internet Information Services) and the .NET 6 framework installed on your machine.\
 We recommend installing Visual Studio and running the project directly from it.
 
-To visit the swagger, navigate to [http://localhost:4000](http://localhost:4000).
+To visit the swagger, navigate to [http://localhost:4000/swagger/index.html](http://localhost:4000/swagger/index.html).
 
 ![swagger](https://github.com/adamwar-dev/app-drive/assets/78816725/f28a5328-1e19-41d2-937d-70e5b9c5dbcf)
 
