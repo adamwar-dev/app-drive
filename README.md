@@ -17,10 +17,10 @@ In the terminal, from the directory containing the docker-compose.yml file, type
 
 Open [http://localhost:3000](http://localhost:3000) to view client app it in your browser.
 Server application will be running at [http://localhost:4000](http://localhost:4000).
+Database will be running at port [http://localhost:1433](http://localhost:1433).
 
-![docker](https://github.com/adamwar-dev/app-drive/assets/78816725/aa56d11c-7c87-48f9-afbb-4d83b06705ae)
+![docker1](https://github.com/adamwar-dev/app-drive/assets/78816725/751f63ce-4383-422a-8d30-b5401b7885db)
 
-// TO DO Database
 
 ### Frontend
 
@@ -43,7 +43,12 @@ To visit the swagger, navigate to [http://localhost:4000](http://localhost:4000)
 ![swagger](https://github.com/adamwar-dev/app-drive/assets/78816725/f28a5328-1e19-41d2-937d-70e5b9c5dbcf)
 
 ### Database
-//TODO
+
+To run SQL Express use command line or (recommend) SSMS.
+
+You can set up a trusted connection locally in the configuration of the server application, however, in Docker, it is necessary to create a user with appropriate permissions.
+
+![sql](https://github.com/adamwar-dev/app-drive/assets/78816725/e9328ae9-7d18-483c-a0b4-ecae2b0b7a46)
 
 ## Authors
 
